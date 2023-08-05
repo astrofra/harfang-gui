@@ -1,6 +1,5 @@
 import harfang as hg
 
-
 class VRControllersHandler:
     
     controllers = None
@@ -60,7 +59,7 @@ class VRControllersHandler:
         return False
 
     @classmethod
-    def update_displays(cls, views_ids: list[int]):
+    def update_displays(cls, views_ids: list ):
         i = 0
         for n in cls.connected_controllers:
             mat = cls.controllers[n]["world"]

@@ -4,3 +4,11 @@
 /source/debug.py
 /bin_
 /work
+/_bin
+/_bin_official
+/_bin_last_build
+/bin_official
+/bin_latest
+/bdist_wheel/dist
+*.pyc
+/assets_compiled

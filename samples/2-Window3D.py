@@ -1,13 +1,20 @@
-# Scene using the PBR shader
-
 import harfang as hg
-from harfang_gui import HarfangUI as hgui
+from harfangui import HarfangUISkin, get_assets_path, HarfangUI as hgui
+from os import path
+import harfang.bin
+from shutil import copy
+
+# Build the assets locally
+
+harfang.bin.assetc(path.join(get_assets_path(), 'assets', '-quiet'), 'assets_compiled')
+
+# Init Harfang
 
 hg.InputInit()
 hg.WindowSystemInit()
 
 width, height = 1280, 720
-window = hg.RenderInit('Harfang GUI - 2D & 3D windows', width, height, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
+window = hg.RenderInit('Harfang GUI - 3D window', width, height, hg.RF_VSync | hg.RF_MSAA4X)
 
 #
 pipeline = hg.CreateForwardPipeline()
@@ -22,9 +29,10 @@ camera = scene.GetNode("Camera")
 cam_pos = hg.Vec3(0, 1, -2)
 cam_rot = hg.Deg3(-7, 0, 0)
 
-# Setup HarfangGUI
+# Setup HarfangUI
 
-hgui.init(["default.ttf"], [20], width, height)
+hgui.init(["roboto-light.ttf"], [20], width, height)
+#HarfangUISkin.convert_properties_RGBA32_to_RGB24_APercent()
 
 # Setup inputs
 
@@ -34,10 +42,8 @@ mouse = hg.Mouse()
 # main loop
 
 flag_check_box0 = False
-flag_check_box1 = False
-hgui_state = False
 
-while not hg.ReadKeyboard().Key(hg.K_Escape) and hg.IsWindowOpen(window):
+while not hg.ReadKeyboard().Key(hg.K_Escape)  and hg.IsWindowOpen(window):
     
     _, width, height = hg.RenderResetToWindow(window, width, height, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
 
@@ -65,30 +71,21 @@ while not hg.ReadKeyboard().Key(hg.K_Escape) and hg.IsWindowOpen(window):
     view_id, pass_view = hg.SubmitSceneToPipeline(view_id, scene, hg.IntRect(0, 0, width, height), True, pipeline, res)
 
     if hgui.begin_frame(dt, mouse, keyboard, window, camera):
-
-        if hgui.begin_window("Harfang GUI 3D Window", hg.Vec3(-2, 2.65, 5), hg.Vec3(0, 0, 0), hg.Vec3(500, 300, 0), 10/1280 ):
+            
+        if hgui.begin_window("My window", hg.Vec3(-2, 2.65, 5), hg.Vec3(0, 0, 0), hg.Vec3(500, 300, 0), 10/1280 ):
 
             hgui.info_text("info1", "Simple Window3D")
             
-            f_pressed, f_down = hgui.button("Button 0")
+            # You can display same widgets names, using "##" prefixe to differenciate widgets ids.
+            
+            f_pressed, f_down = hgui.button("Button##1")
             if f_pressed:
-                print("Click btn 0")
+                print("Click btn ##1")
+            f_pressed, f_down = hgui.button("Button##2")
+            if f_pressed:
+                print("Click btn ##2")
             
             _, flag_check_box0 = hgui.check_box("Check box", flag_check_box0)
-
-            hgui.end_window()
-        
-        if hgui.begin_window_2D("HGUI 2D window",  hg.Vec2(50, 50), hg.Vec2(500, 300), 1 ):
-
-            hgui.info_text("info2", "Window2D with window 3D")
-            hgui.same_line()
-            hgui.image("img1", "textures/logo.png", hg.Vec2(221, 190))
-            
-            f_pressed, f_down = hgui.button("Button 1")
-            if f_pressed:
-                print("Click btn 1")
-            
-            _, flag_check_box1 = hgui.check_box("Check box 2", flag_check_box1)
 
             hgui.end_window()
 

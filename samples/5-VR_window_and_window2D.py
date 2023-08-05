@@ -1,5 +1,12 @@
 import harfang as hg
-from harfang_gui import HarfangUI as hgui
+from harfangui import get_assets_path, HarfangUI as hgui
+from os import path
+import harfang.bin
+from shutil import copy
+
+# Build the assets locally
+
+harfang.bin.assetc(path.join(get_assets_path(), 'assets', '-quiet'), 'assets_compiled')
 
 # Init Harfang
 
@@ -9,7 +16,7 @@ hg.WindowSystemInit()
 width, height = 1280, 720
 window = hg.RenderInit('Harfang GUI - 2D & 3D windows', width, height, hg.RF_VSync | hg.RF_MSAA4X | hg.RF_MaxAnisotropy)
 
-hg.AddAssetsFolder("assets_compiled")
+hg.AddAssetsFolder("source/assets_compiled")
 
 res = hg.PipelineResources()
 pipeline = hg.CreateForwardPipeline()
@@ -34,9 +41,9 @@ camera = scene.GetNode("Camera")
 cam_pos = hg.Vec3(0, 1, -2)
 cam_rot = hg.Deg3(-7, 0, 0)
 
-# Setup HarfangGUI
+# Setup HarfangUI
 
-hgui.init(["default.ttf"], [20], width, height)
+hgui.init(["roboto-light.ttf"], [20], width, height)
 
 # Setup inputs
 
@@ -96,11 +103,13 @@ while not hg.ReadKeyboard().Key(hg.K_Escape) and hg.IsWindowOpen(window):
         if hgui.begin_window("My window 3D", hg.Vec3(-2, 2.65, 5), hg.Vec3(0, 0, 0), hg.Vec3(500, 300, 0), 10/1280 ):
 
             hgui.info_text("info1", "Simple Window3D")
+            """
             if hg.OpenVRIsHMDMounted():
                 pointer_vr_msg = "Helmet mounted : Pointer VR activated"
             else:
                 pointer_vr_msg = "Helmet unmounted : Pointer VR deactivated"
-            hgui.info_text("info2", pointer_vr_msg)
+            """
+            hgui.info_text("info2", "VR pointer is Work In Progress :)")
             
 
             hgui.end_window()
